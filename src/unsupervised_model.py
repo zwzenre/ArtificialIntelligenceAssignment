@@ -1,8 +1,10 @@
 from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
 from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
 
-def run_unsupervised_model(X, y):
+# K-Means Model
+def run_kmeans(X, y):
     # Train K-Means (no labels used here)
     kmeans = KMeans(n_clusters=2, random_state=42)
     kmeans.fit(X)
@@ -24,6 +26,30 @@ def run_unsupervised_model(X, y):
     report = classification_report(y, predicted_labels)
 
     print("\n=== K-Means (Unsupervised) ===")
+    print("Accuracy:", accuracy)
+    print(report)
+
+    return accuracy
+
+# DBSCAN Model
+def run_dbscan(X, y):
+    model = DBSCAN(eps=0.5, min_samples=5)
+    clusters = model.fit_predict(X)
+
+    # Replace noise (-1) with a label (e.g., spam = 1)
+    clusters = np.where(clusters == -1, 1, clusters)
+
+    # Map clusters to actual labels
+    mapped_labels = np.zeros_like(clusters)
+
+    for cluster in np.unique(clusters):
+        mask = (clusters == cluster)
+        mapped_labels[mask] = np.bincount(y[mask]).argmax()
+
+    accuracy = accuracy_score(y, mapped_labels)
+    report = classification_report(y, mapped_labels)
+
+    print("\n=== DBSCAN (Unsupervised) ===")
     print("Accuracy:", accuracy)
     print(report)
 

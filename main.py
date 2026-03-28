@@ -1,8 +1,8 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-from src.supervised_model import run_supervised_model
-from src.unsupervised_model import run_unsupervised_model
+from src.supervised_model import run_naive_bayes, run_svm
+from src.unsupervised_model import run_kmeans, run_dbscan
 
 # Load dataset
 data = pd.read_csv("data/spam.csv")
@@ -23,10 +23,16 @@ X = vectorizer.fit_transform(data['message'])
 y = data['label']
 
 # Run models
-nb_accuracy = run_supervised_model(X, y)
-km_accuracy = run_unsupervised_model(X, y)
+nb_accuracy = run_naive_bayes(X, y)
+svm_accuracy = run_svm(X, y)
+
+km_accuracy = run_kmeans(X, y)
+db_accuracy = run_dbscan(X, y)
 
 # Compare
 print("\n=== Comparison ===")
 print("Naive Bayes Accuracy:", nb_accuracy)
+print("SVM Accuracy:", svm_accuracy)
+
 print("K-Means Accuracy:", km_accuracy)
+print("DBSCAN Accuracy:", db_accuracy)
