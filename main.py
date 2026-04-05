@@ -1,8 +1,9 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+from sklearn.model_selection import train_test_split
 from src.supervised_model import run_naive_bayes, run_svm
 from src.unsupervised_model import run_kmeans, run_dbscan
+from gui import run_gui
 
 # Load dataset
 data = pd.read_csv("data/spam.csv")
@@ -16,18 +17,22 @@ data = data.dropna(subset=['message'])
 # Convert labels
 data['label'] = data['label'].map({'ham': 0, 'spam': 1})
 
-
 # TF-IDF
 vectorizer = TfidfVectorizer(stop_words='english')
-X = vectorizer.fit_transform(data['message'])
+x = vectorizer.fit_transform(data['message'])
 y = data['label']
 
-# Run models
-nb_accuracy = run_naive_bayes(X, y)
-svm_accuracy = run_svm(X, y)
+# Split ONCE
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, test_size=0.2, random_state=42
+)
 
-km_accuracy = run_kmeans(X, y)
-db_accuracy = run_dbscan(X, y)
+# Run models
+nb_model, nb_accuracy = run_naive_bayes(x_train, x_test, y_train, y_test)
+svm_model, svm_accuracy = run_svm(x_train, x_test, y_train, y_test)
+
+km_accuracy = run_kmeans(x_train, x_test, y_train, y_test)
+db_accuracy = run_dbscan(x, y)
 
 # Compare
 print("\n=== Comparison ===")
@@ -36,3 +41,5 @@ print("SVM Accuracy:", svm_accuracy)
 
 print("K-Means Accuracy:", km_accuracy)
 print("DBSCAN Accuracy:", db_accuracy)
+
+run_gui(vectorizer, nb_model, svm_model)
