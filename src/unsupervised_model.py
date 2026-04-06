@@ -4,12 +4,12 @@ from sklearn.metrics import accuracy_score, classification_report
 import numpy as np
 
 # K-Means Model
-def run_kmeans(X_train, X_test, y_train, y_test):
+def run_kmeans(x_train, x_test, y_train, y_test):
     # Train K-Means (no labels used here)
     kmeans = KMeans(n_clusters=2, random_state=42)
-    kmeans.fit(X_train)
+    kmeans.fit(x_train)
 
-    clusters = kmeans.predict(X_test)
+    clusters = kmeans.predict(x_test)
 
     # Map clusters to labels (for evaluation only)
     predicted_labels = np.zeros_like(clusters)
@@ -21,6 +21,15 @@ def run_kmeans(X_train, X_test, y_train, y_test):
         else:
             predicted_labels[mask] = 0
 
+    # use training data to do mapping
+    train_clusters = kmeans.predict(x_train)
+
+    cluster_to_label = {}
+
+    for c in np.unique(train_clusters):
+        mask = (train_clusters == c)
+        cluster_to_label[c] = np.bincount(y_train[mask]).argmax()
+
     # Results
     accuracy = accuracy_score(y_test, predicted_labels)
     report = classification_report(y_test, predicted_labels)
@@ -29,7 +38,7 @@ def run_kmeans(X_train, X_test, y_train, y_test):
     print("Accuracy:", accuracy)
     print(report)
 
-    return accuracy
+    return kmeans, cluster_to_label, accuracy
 
 # DBSCAN Model
 def run_dbscan(x,y):

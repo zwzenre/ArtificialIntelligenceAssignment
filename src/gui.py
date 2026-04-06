@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-def run_gui(vectorizer, nb_model, svm_model):
+def run_gui(vectorizer, nb_model, svm_model, km_model, cluster_to_label):
     def predict_email():
         email_text = text_input.get("1.0", tk.END)
 
@@ -16,12 +16,13 @@ def run_gui(vectorizer, nb_model, svm_model):
             prediction = svm_model.predict(email_vector)[0]
 
         elif algo == "K-Means":
-            prediction = "Clustered (Unsupervised)"
+            cluster = km_model.predict(email_vector)[0]
+            prediction = cluster_to_label[cluster]
 
         elif algo == "DBSCAN":
             prediction = "Clustered (Unsupervised)"
 
-        # 👉 转回 label
+        # change back to label
         if prediction == 1:
             result = "Spam"
         elif prediction == 0:
