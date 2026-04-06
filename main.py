@@ -31,7 +31,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 nb_model, nb_accuracy = run_naive_bayes(x_train, x_test, y_train, y_test)
 svm_model, svm_accuracy = run_svm(x_train, x_test, y_train, y_test)
 
-km_accuracy = run_kmeans(x_train, x_test, y_train, y_test)
+km_model, cluster_to_label, km_accuracy = run_kmeans(x_train, x_test, y_train, y_test)
 db_accuracy = run_dbscan(x, y)
 
 # Compare
@@ -42,4 +42,4 @@ print("SVM Accuracy:", svm_accuracy)
 print("K-Means Accuracy:", km_accuracy)
 print("DBSCAN Accuracy:", db_accuracy)
 
-run_gui(vectorizer, nb_model, svm_model)
+run_gui(vectorizer, nb_model, svm_model, km_model, cluster_to_label)
