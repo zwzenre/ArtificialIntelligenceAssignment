@@ -5,7 +5,6 @@ def run_gui(vectorizer, nb_model, svm_model):
     def predict_email():
         email_text = text_input.get("1.0", tk.END)
 
-        # 👉 转 TF-IDF
         email_vector = vectorizer.transform([email_text])
 
         algo = algo_var.get()
