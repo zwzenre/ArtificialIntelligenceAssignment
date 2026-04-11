@@ -1,9 +1,9 @@
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, classification_report
 
-# Naive Bayes Model
+# Naive Bayes Model (NG ZHE WEI)
 def run_naive_bayes(x_train, x_test, y_train, y_test):
     # Train model
     model = MultinomialNB()
@@ -22,10 +22,10 @@ def run_naive_bayes(x_train, x_test, y_train, y_test):
 
     return model, accuracy
 
-# SVM Model
+# SVM Model (KHOO KAH QIN)
 def run_svm(x_train, x_test, y_train, y_test):
 
-    model = LinearSVC()
+    model = SVC(probability=True)
     model.fit(x_train, y_train)
 
     y_pred = model.predict(x_test)
